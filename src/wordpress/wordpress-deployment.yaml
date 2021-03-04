@@ -11,4 +11,16 @@ spec:
     app: wordpress-app
     tier: frontend
   type: LoadBalancer
-  
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wp-pv-claim
+  labels:
+    app: wordpress-app
+spec:
+  accessMode:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
