@@ -19,7 +19,7 @@ metadata:
   labels:
     app: wordpress-app
 spec:
-  accessMode:
+  accessModes:
     - ReadWriteOnce
   resources:
     requests:
@@ -53,8 +53,8 @@ spec:
           - name: WORDPRESS_DB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: mysql-pass
-                key: password
+                name: mysql-secret
+                key: mysql-root-password 
           ports:
             - containerPort: 80
               name: wordpress-app
@@ -63,5 +63,5 @@ spec:
             mountPath: /var/www/html
       volumes:
         - name: wordpress-persistent-storage
-          PersistentVolumeClaim:
+          persistentVolumeClaim:
             claimName: wp-pv-claim
