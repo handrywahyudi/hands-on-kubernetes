@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-b-deployment
+  labels:
+    app: microservice-b 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservice-b 
+  template:
+    metadata:
+      labels:
+        app: microservice-b
+    spec:
+      containers:
+      - name: microservice-b
+        image: local/microservices-b:0.0.1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 200m
+          limits:
+            cpu: 500m
+        env:
+        - name: MICROSERVICE_A_URL 
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: microservice-a-url
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice-b-service
+spec:
+  selector:
+    app: microservice-b
+  # type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8282 
+      targetPort: 8080
+      # nodePort: 30001
